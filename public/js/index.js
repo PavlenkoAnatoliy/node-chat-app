@@ -4,7 +4,7 @@ socket.on('connect', function () {
   console.log('Connected to server');
 
   socket.emit('createMessage', {
-    to: 'jen@example.com',
+    from: 'jen@example.com',
     text: 'How do you do?'
   });
 });
