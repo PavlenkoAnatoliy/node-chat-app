@@ -21,7 +21,13 @@ io.on('connection', (socket) => {
 
   socket.on('join', (params, callback) => {
     if (!isRealString(params.name) || !isRealString(params.room)) {
-      return callback('Name and room name are required.')
+      return callback('User with this name already exist.')
+    }
+
+    var listOfUsers = users.getUserList(params.room);
+
+    if (listOfUsers.filter(user => user === params.name).length) {
+      return callback('User with this name already exist.')
     }
 
     socket.join(params.room);
@@ -31,7 +37,7 @@ io.on('connection', (socket) => {
     io.to(params.room).emit('updateUserList', users.getUserList(params.room));
     socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app!'));
     socket.broadcast.to(params.room).emit('newMessage',generateMessage('Admin', `${params.name} has joined.`));
-  
+    
     callback();
   });
 
